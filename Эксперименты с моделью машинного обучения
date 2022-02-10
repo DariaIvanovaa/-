@@ -1,0 +1,121 @@
+from the google.colab import disk
+ drive.flush_and_unmount()
+ drive.mount('/content/drive')
+
+ pandas import as pd
+
+ data = pd.read_csv('drive/My drive/2_5221953742512854245.csv')
+
+ panda import
+ import matplotlib.pyplot as plt
+ seaborn import as sns
+ sns.set()
+
+ !pip install xgboost
+
+ from sklearn.tree import DecisionTreeClassifier
+
+ x=data.drop(['DXNORM'], axis=1)
+ y=data['DXNORM']
+
+from sklearn.model_selection import train_test_split
+import numpy as np
+np.random.seed(42)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+from sklearn.tree import DecisionTreeClassifier
+
+tree =DecisionTreeClassifier()
+tree.fit(x_train, y_train)
+tree_prediction = tree.predict(x_test)
+
+# for elem in tree_prediction:
+#   if elem == 1:
+
+tree_importance = tree.feature_importances_
+
+tree_importance = pd.Series(data=tree_importance, index=x.columns)
+good = tree_importance[tree_importance>.0]
+
+from sklearn.model_selection import train_test_split
+import numpy as np
+np.random.seed(42)
+
+x = data.drop(['DXNORM'], axis=1)
+y = data['DXNORM']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+print(x_train.shape)
+print(y_train.shape)
+print(x_test.shape)
+print(y_test.shape)
+
+y_pred_baseline=[0]*len(y_test)
+
+print(accuracy_score(y_test, tree_prediction))
+print(precision_score(y_test, tree_prediction))
+print(recall_score(y_test, tree_prediction))
+print(f1_score(y_test, tree_prediction, average='macro'))
+
+from sklearn.model_selection import train_test_split
+import numpy as np
+np.random.seed(42)
+columns = ['leave', 'mental_health_consequense']
+x=data.drop(['DXNORM'], axis=1)[list(good.index)]
+y=data['DXNORM']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+tree = DecisionTreeClassifier(max_depth=10)
+tree.fit(x_train, y_train)
+tree_prediction = tree.predict(x_test)
+
+print('accuracy', accuracy_score(y_test, tree_prediction))
+print('precision', precision_score(y_test, tree_prediction))
+print('recall', recall_score(y_test, tree_prediction))
+print('f1', f1_score(y_test, tree_prediction, average='macro'))
+
+import numpy as np
+np.random.seed(42)
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import MinMaxScaler
+
+x=data.drop(['DXNORM'], axis=1)[list(good.index)]
+y=data['DXNORM']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+knn_model = KNeighborsClassifier(4)
+knn_model.fit(x_train, y_train)
+knn_pred = knn_model.predict(x_test)
+accuracy = accuracy_score(y_test, knn_pred)
+
+print('accuracy', accuracy_score(y_test, knn_pred))
+print('precision', precision_score(y_test, knn_pred))
+print('recall', recall_score(y_test, knn_pred))
+print('f1', f1_score(y_test, knn_pred, average='macro'))
+
+tree = DecisionTreeClassifier(max_depth=2)
+tree.fit(x_train, y_train)
+tree_prediction = tree.predict(x_test)
+
+from sklearn.linear_model import LogisticRegression
+
+x=data.drop(['DXNORM'], axis=1)
+y=data['DXNORM']
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
+
+lr = LogisticRegression(C=10).fit(x_train, y_train)
+lr_pred = lr.predict(x_test)
+
+print('accuracy', accuracy_score(y_test, lr_pred))
+print('precision', precision_score(y_test, lr_pred))
+print('recall', recall_score(y_test, lr_pred))
+print('f1', f1_score(y_test, lr_pred, average='macro'))
+
+plt.figure(figsize=(25,7))
+pd.Series(data=tree_importance, index=x.columns).plot(kind='bar')
+
